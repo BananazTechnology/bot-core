@@ -29,7 +29,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.java }}
-          distribution: 'adopt'
       # Runs a set of commands using the runners shell
       - name: Publish package
         run: mvn --batch-mode deploy
