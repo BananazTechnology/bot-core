@@ -10,15 +10,13 @@
 
   <name>bot-core</name>
   <url>https://bananaz.tech</url>
-  
-  <scm>
-    <url>https://github.com/BananazTechnology/bot-core</url>
-  </scm>
 
   <properties>
+  	<github.location>BananazTechnology/bot-core</github.location>
   	<spring.version>2.5.4</spring.version>
   	<lombok.version>1.18.20</lombok.version>
     <java.version>11</java.version>
+    <sonar.projectKey>bot-core</sonar.projectKey>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -57,4 +55,12 @@
       <version>2.0.1.Final</version>
     </dependency>
   </dependencies>
+  
+  <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/${github.location}</url>
+    </repository>
+  </distributionManagement>
 </project>
