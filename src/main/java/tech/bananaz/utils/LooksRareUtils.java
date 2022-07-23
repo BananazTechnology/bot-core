@@ -11,19 +11,46 @@ import net.minidev.json.JSONObject;
 public class LooksRareUtils {
 
 	// Base URL is the query endpoint for the subgraph we need to query
-	private static String BASEURL      	 = "https://api.looksrare.org/api/v1/events?collection=%s&type=LIST";
+	private static String BASE_URL       = "https://api.looksrare.org/api/v1/events?collection=%s&type=%s";
 	private RestTemplate restTemplate    = new RestTemplate();
 	private StringUtils sUtils         	 = new StringUtils();
 	private JsonUtils jUtils 	   	   	 = new JsonUtils();
 	private static final Logger LOGGER 	 = LoggerFactory.getLogger(LooksRareUtils.class);
 	
+	private enum EventType {
+		LISTINGS("LIST"),
+		SALES("SALE");
+		
+		private String eventType;
+
+		EventType(String string) {
+			this.eventType = string;
+		}
+		
+		public String toString() {
+			return this.eventType;
+		}
+		
+	}
+	
+	public JSONObject getEventsSalesAddress(String address) throws Exception {
+		return getEvents(address, EventType.SALES);
+	}
+	
+	public JSONObject getEventsListingsAddress(String address) throws Exception {
+		return getEvents(address, EventType.LISTINGS);
+	}
+	
 	/**
-	 * Gets the events for a specific contract
+	 * Lookup collection events by the contract address
 	 * @param contract
 	 * @return
 	 */
-	public JSONObject getEvents(String contract) throws Exception {
-		String buildUrl = String.format(BASEURL, contract);
+	private JSONObject getEvents(String contract, EventType eventType) throws Exception {
+		String buildUrl = String.format(
+				BASE_URL, 
+				contract, 
+				eventType);
 		return getAllRequest(buildUrl);
 	}
 	

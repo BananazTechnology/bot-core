@@ -3,19 +3,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.5.4</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
 
   <groupId>tech.bananaz</groupId>
   <artifactId>bot-core</artifactId>
-  <version>0.1.2</version>
+  <version>0.1.4</version>
 
   <name>bot-core</name>
   <description>An @apache Maven library for all core/base project resources</description>
   <url>https://bananaz.tech</url>
 
   <properties>
-  	<github.location>BananazTechnology/bot-core</github.location>
-  	<spring.version>2.5.4</spring.version>
-  	<lombok.version>1.18.20</lombok.version>
+    <github.location>BananazTechnology/bot-core</github.location>
     <java.version>11</java.version>
     <sonar.projectKey>bot-core</sonar.projectKey>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -24,36 +28,31 @@
   </properties>
 
   <dependencies>
-  	<!-- Spring -->
+    <!-- Spring -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <version>${spring.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
-      <version>${spring.version}</version>
     </dependency>
   
     <!-- JSON Parser -->
     <dependency>
       <groupId>net.minidev</groupId>
       <artifactId>json-smart</artifactId>
-      <version>2.4.7</version>
     </dependency>
-		
+    
     <!-- Boilerplate -->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
-      <version>${lombok.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.validation</groupId>
       <artifactId>validation-api</artifactId>
-      <version>2.0.1.Final</version>
     </dependency>
   </dependencies>
   

@@ -9,6 +9,7 @@
   * [Install Maven](#install-maven)
   * [Add Github to Settings](#add-github-to-settings)
   * [Local Workspace Offline](#local-workspace-offline)
+  * [Utilizing Spring Resources](#utilizing-spring-resources)
   
 ## Introduction
 
@@ -34,4 +35,19 @@ Please ask for help if you do not already have a `~/.m2/settings.xml` file avail
 Using Maven this project can be installed into the local lookup on your PC by running:
 ```bash
 mvnw clean install
+```
+
+### Utilizing Spring Resources
+Include these following annotations inside your Main class, these should come right under `@SpringBootApplication`. It is better to manually select as many individule aspects as you can to prevent overloading.
+
+```java
+@ComponentScan({"tech.bananaz.*"})
+@EnableJpaRepositories(basePackageClasses = {
+	EventPagingRepository.class, 
+	ListingConfigPagingRepository.class, 
+	SaleConfigPagingRepository.class})
+@EntityScan(basePackageClasses = {
+	Event.class, 
+	Listing.class, 
+	Sale.class})
 ```

@@ -1,10 +1,8 @@
 package tech.bananaz.enums;
 
-/**
- * 
- * @author aaronrenner
- * @version 1.0.1
- */
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 public enum Ticker {
     ETH("eth", "Ξ"),
     WETH("weth", "Ξ"),
@@ -14,11 +12,6 @@ public enum Ticker {
 
     private String ticker;
     private String symbol;
-
-    Ticker(String ticker, String symbol) {
-        this.ticker = ticker;
-        this.symbol = symbol;
-    }
 
     public String getSymbol() {
         return symbol;
