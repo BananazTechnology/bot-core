@@ -76,7 +76,7 @@ public class ParsingUtils {
 		Integer quantity 	 	 = Integer.valueOf(order.getAsString("amount"));
 		
 		// Rarity lookup
-		String raritySlug = (nonNull(c.getRaritySlugOverwrite()) && !c.getRaritySlugOverwrite().isBlank()) ? c.getRaritySlugOverwrite() : slug;
+		String raritySlug = (nonNull(c.getRaritySlugOverwrite())) ? c.getRaritySlugOverwrite() : slug;
 		Rarity r = rUtils.getRarity(c.getContractAddress(), raritySlug, tokenId, c.getAutoRarity());
 		
 		// Name formatting for when null
@@ -155,7 +155,7 @@ public class ParsingUtils {
 		String buyerName	    = null;
 		String buyerUrl		    = null;
 		String buyerWalletAddy  = null;
-		if(!buyerObj.isEmpty()) {
+		if(nonNull(buyerObj)) {
 			JSONObject buyerUser = (JSONObject) buyerObj.get("user");
 			eventType = EventType.SALE;
 			buyerName = sUtils.tryUsernameOrFormatAddress(buyerUser, buyerWalletAddy);
@@ -215,7 +215,7 @@ public class ParsingUtils {
 		BigDecimal priceInCrypto = convert.convertToCrypto(priceInWei, decimals);
 		
 		// Rarity lookup
-		String raritySlug = (nonNull(c.getRaritySlugOverwrite()) && !c.getRaritySlugOverwrite().isBlank()) ? c.getRaritySlugOverwrite() : slug;
+		String raritySlug = (nonNull(c.getRaritySlugOverwrite())) ? c.getRaritySlugOverwrite() : slug;
 		Rarity r = rUtils.getRarity(c.getContractAddress(), raritySlug, tokenId, c.getAutoRarity());
 		
 		// Calculate USD
@@ -224,8 +224,10 @@ public class ParsingUtils {
 			BigDecimal ethInUSD = valueLookup.getPriceInUSD(cryptoType);
 			priceInUsd = priceInCrypto.multiply(ethInUSD);
 		} catch (Exception ex) {
-			double priceOfOnePayment = Double.parseDouble(usdOfPayment);
-			priceInUsd = priceInCrypto.multiply(BigDecimal.valueOf(priceOfOnePayment));
+			if(nonNull(paymentToken)) {
+				double priceOfOnePayment = Double.parseDouble(usdOfPayment);
+				priceInUsd = priceInCrypto.multiply(BigDecimal.valueOf(priceOfOnePayment));
+			}
 		}
 		
 		// Process final things to complete the object
