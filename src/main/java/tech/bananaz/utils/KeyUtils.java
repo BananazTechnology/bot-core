@@ -4,8 +4,8 @@ import net.minidev.json.JSONObject;
 
 public class KeyUtils {
 
-	private final String APIKEY = "a2V5OmJ0";
-	private final String KEY_URL = "http://proxy.kong.aaronrenner.com/api/keys?apikey="+APIKEY;
+	private final String APIKEY = "YnRrZXlzMjAyMgo=";
+	private final String KEY_URL = "http://proxy.aar.dev/api/keys?apikey="+APIKEY;
 	private UrlUtils uUtils = new UrlUtils();
 	
 	public KeyUtils() {}

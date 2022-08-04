@@ -50,19 +50,19 @@ public class OpenseaUtils {
 	}
 	
 	public JSONObject getEventsSalesAddress(String address) throws Exception {
-		return getCollectionEvents(address, EventType.SALES);
+		return getCollectionEvents(address, EventType.SALES, CONTRACT_ADDRESS_QUERY);
 	}
 	
 	public JSONObject getEventsSalesSlug(String slug) throws Exception {
-		return getCollectionEventsWithSlug(slug, EventType.SALES);
+		return getCollectionEvents(slug, EventType.SALES, COLLECTION_SLUG_QUERY);
 	}
 	
 	public JSONObject getEventsListingsAddress(String address) throws Exception {
-		return getCollectionEvents(address, EventType.LISTINGS);
+		return getCollectionEvents(address, EventType.LISTINGS, CONTRACT_ADDRESS_QUERY);
 	}
 	
 	public JSONObject getEventsListingsSlug(String slug) throws Exception {
-		return getCollectionEventsWithSlug(slug, EventType.LISTINGS);
+		return getCollectionEvents(slug, EventType.LISTINGS, COLLECTION_SLUG_QUERY);
 	}
 	
 	/**
@@ -70,12 +70,12 @@ public class OpenseaUtils {
 	 * @param contract
 	 * @return
 	 */
-	private JSONObject getCollectionEventsWithSlug(String slug, EventType eventType) throws Exception {
+	private JSONObject getCollectionEvents(String lookupId, EventType eventType, String lookupQueryParam) throws Exception {
 		String buildUrl = String.format(
 				OPENSEA_EVENTS_URL, 
 				eventType,
 				POLL_SIZE,
-				COLLECTION_SLUG_QUERY + slug);
+				lookupQueryParam + lookupId);
 		
 		// Create header for validating
 		HttpHeaders headers = new HttpHeaders();
@@ -84,29 +84,6 @@ public class OpenseaUtils {
 		HttpEntity<String> wrappedRequest = new HttpEntity<>(headers);
 		
 		return getAllRequest(buildUrl, wrappedRequest);
-		
-	}
-	
-	/**
-	 * Lookup collection events by the contract address
-	 * @param contract
-	 * @return
-	 */
-	private JSONObject getCollectionEvents(String address, EventType eventType) throws Exception {
-		String buildUrl = String.format(
-				OPENSEA_EVENTS_URL, 
-				eventType,
-				POLL_SIZE,
-				CONTRACT_ADDRESS_QUERY + address);
-		
-		// Create header for validating
-		HttpHeaders headers = new HttpHeaders();
-		headers.set(APIKEYHEAD, this.apiKey);
-		// Wrap headers in request body
-		HttpEntity<String> wrappedRequest = new HttpEntity<>(headers);
-		
-		return getAllRequest(buildUrl, wrappedRequest);
-		
 	}
 	
 	/**
