@@ -27,6 +27,8 @@ public class Event implements Comparable<Event> {
 	private long         id;
 	@Column(columnDefinition = "VARCHAR(75)")
 	private String       name;
+	@Column(columnDefinition = "VARCHAR(50)")
+	private String       contractAddress;
 	private Instant      createdDate;
 	private Instant      startTime;
 	private Instant      endTime;

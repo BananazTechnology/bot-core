@@ -5,11 +5,11 @@ import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
-
+import net.minidev.json.JSONObject;
 import tech.bananaz.enums.Ticker;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-
 import java.math.BigDecimal;
 
 public class StringUtils {
@@ -35,7 +35,7 @@ public class StringUtils {
 		return newURI;
 	}
 	
-	public String addressSimple(String address, String bidderENSLookup) {
+	public String addressSimple(String address, String bidderENSLookup) throws NullPointerException {
 		String returnString;
 		returnString = (address.equals(bidderENSLookup)) ? address.substring(0, 8) : bidderENSLookup;
 		return returnString;
@@ -100,10 +100,70 @@ public class StringUtils {
 		return !(String.valueOf(a).equalsIgnoreCase(String.valueOf(b)));
 	}
 	
+	/**
+	 * Main string price formatting for Discord
+	 * @param priceInCrypto
+	 * @param cryptoPaymentType
+	 * @param priceInUsd
+	 * @return
+	 */
 	public String pricelineFormat(BigDecimal priceInCrypto, Ticker cryptoPaymentType, BigDecimal priceInUsd) {
 		String cryptoValue = (nonNull(priceInCrypto)) ? String.format("%3f", priceInCrypto) : "NULL";
 		String paymentType = (nonNull(cryptoPaymentType)) ? cryptoPaymentType.getSymbol() : "";
 		String usdValue    = (nonNull(priceInUsd)) ? String.format("($%s)", dFormat.format(priceInUsd.doubleValue())) : "";
 		return String.format("%s%s %s", cryptoValue, paymentType, usdValue);
+	}
+	
+	/**
+	 * Fail-safe method to format the display name for an NFT
+	 * @param nftName
+	 * @param collectionName
+	 * @param tokenId
+	 * @return
+	 * @throws NullPointerException Specify this to handle
+	 */
+	public String buildNftDisplayName(String nftName, String collectionName, String tokenId) throws NullPointerException {
+		return (nonNull(nftName)) ? nftName : collectionName + " #" + tokenId;
+	}
+	
+	/**
+	 * Looks for a username K/V pair in the data JSONObject or return chars 0-8 of the address
+	 * @param data
+	 * @param address
+	 * @return
+	 * @throws NullPointerException Specify this to handle
+	 */
+	public String tryUsernameOrFormatAddress(JSONObject data, String address) throws NullPointerException {
+		try {
+			String response = data.getAsString("username");
+			if(nonNull(response)) return response;
+			return response;
+		} catch (Exception e) { }
+		return address.substring(0, 8);
+	}
+	
+	/**
+	 * Return chars 0-8 of a string
+	 * @param address
+	 * @return
+	 */
+	public String simplifyEthAddress(String address) {
+		return address.substring(0, 8);
+	}
+	
+	/**
+	 * Returns a save image for Discord, if imageUrl is png or blank or empty this function returns collectionImageUrl
+	 * @param imageUrl
+	 * @param collectionImageUrl
+	 * @return
+	 */
+	public String chooseImageUrl(String imageUrl, String collectionImageUrl) {
+		if(isNull(imageUrl)) return collectionImageUrl;
+		if(nonNull(imageUrl)) {
+			if(imageUrl.contains(".svg") || imageUrl.isBlank() || imageUrl.isEmpty()) {
+				return collectionImageUrl;
+			}
+		}
+		return imageUrl;
 	}
 }
