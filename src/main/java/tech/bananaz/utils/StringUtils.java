@@ -101,7 +101,7 @@ public class StringUtils {
 	}
 	
 	/**
-	 * Main string price formatting for Discord
+	 * Main string price formatting for DiscordConfig
 	 * @param priceInCrypto
 	 * @param cryptoPaymentType
 	 * @param priceInUsd
@@ -152,7 +152,7 @@ public class StringUtils {
 	}
 	
 	/**
-	 * Returns a save image for Discord, if imageUrl is png or blank or empty this function returns collectionImageUrl
+	 * Returns a save image for DiscordConfig, if imageUrl is png or blank or empty this function returns collectionImageUrl
 	 * @param imageUrl
 	 * @param collectionImageUrl
 	 * @return
@@ -165,5 +165,13 @@ public class StringUtils {
 			}
 		}
 		return imageUrl;
+	}
+	
+	public static String capitalizeFirstLetter(String str) {
+	    if(str == null || str.isEmpty()) {
+	        return str;
+	    }
+
+	    return str.substring(0, 1).toUpperCase() + str.substring(1);
 	}
 }
