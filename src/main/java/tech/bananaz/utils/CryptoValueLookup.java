@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class CryptoValueLookup {
 
 	private final String APIKEY = "Y29pbnNidDIwMjIhCg==";
-	private final String COINS_URL = "http://proxy.aar.dev/coins?apikey="+APIKEY;
+	private final String COINS_URL = "https://proxy.aar.dev/coins?apikey="+APIKEY;
 	private UrlUtils uUtils = new UrlUtils();
 	
 	public CryptoValueLookup() {}
