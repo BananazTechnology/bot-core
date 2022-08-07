@@ -16,6 +16,7 @@ public interface EventPagingRepository extends PagingAndSortingRepository<Event,
 	Event	    findById(long id);
 	boolean 	existsByIdAndConsumedFalse(long id);
 	List<Event> findByConfigIdAndConsumedFalseAndEventTypeOrderByCreatedDateAsc(long configId, EventType eventType);
+	boolean		existsByHash(String hash);
 	
 	@Transactional
 	@Modifying

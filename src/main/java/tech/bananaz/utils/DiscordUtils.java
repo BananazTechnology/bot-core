@@ -67,7 +67,10 @@ public class DiscordUtils {
 					String.format("**Rank** [%s](%s) on %s \n", event.getRarity(), event.getRarityUrl(), event.getRarityEngine().getDisplayName()) : 
 					"";
 			// Build title
-			String title = String.format("%s %s! (%s)", event.getName(), capitalizeFirstLetter(event.getEventType().toString()), event.getMarket());
+			String title = String.format("%s %s! (%s)", 
+											event.getName(), 
+											capitalizeFirstLetter(event.getEventType().toString()), 
+											event.getMarket().getSlug());
 			// Set buyer field for a sale or blank
 			String buyerText = (nonNull(event.getBuyerWalletAddy())) ?  "**Buyer**  " + String.format("[`%s`](%s) \n", event.getBuyerName(), event.getBuyerUrl()) : "";
 			// Build embed

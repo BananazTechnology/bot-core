@@ -108,7 +108,7 @@ public class StringUtils {
 	 * @return
 	 */
 	public String pricelineFormat(BigDecimal priceInCrypto, Ticker cryptoPaymentType, BigDecimal priceInUsd) {
-		String cryptoValue = (nonNull(priceInCrypto)) ? String.format("%3f", priceInCrypto) : "NULL";
+		String cryptoValue = (nonNull(priceInCrypto)) ? String.format("%s", priceInCrypto) : "NULL";
 		String paymentType = (nonNull(cryptoPaymentType)) ? cryptoPaymentType.getSymbol() : "";
 		String usdValue    = (nonNull(priceInUsd)) ? String.format("($%s)", dFormat.format(priceInUsd.doubleValue())) : "";
 		return String.format("%s%s %s", cryptoValue, paymentType, usdValue);
@@ -167,11 +167,16 @@ public class StringUtils {
 		return imageUrl;
 	}
 	
+	/**
+	 * Calls lower case on the input string then capitalizes the first letter
+	 * @param str
+	 * @return
+	 */
 	public static String capitalizeFirstLetter(String str) {
 	    if(str == null || str.isEmpty()) {
 	        return str;
 	    }
-
-	    return str.substring(0, 1).toUpperCase() + str.substring(1);
+	    String loc = str.toLowerCase();
+	    return loc.substring(0, 1).toUpperCase() + loc.substring(1);
 	}
 }
