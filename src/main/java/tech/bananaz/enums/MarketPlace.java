@@ -5,11 +5,13 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum MarketPlace {
-    OPENSEA("opensea"),
-    LOOKSRARE("looksrare");
+    OPENSEA("opensea", "OS"),
+    LOOKSRARE("looksrare", "LR");
 	
     @Getter
     private String displayName;
+    @Getter
+    private String slug;
 
     @Override
     public String toString() {
