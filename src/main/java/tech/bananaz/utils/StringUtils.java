@@ -136,10 +136,16 @@ public class StringUtils {
 	public String tryUsernameOrFormatAddress(JSONObject data, String address) throws NullPointerException {
 		try {
 			String response = data.getAsString("username");
-			if(nonNull(response)) return response;
-			return response;
+			if(nonNull(response)) {
+				if(!response.isBlank() && 
+				   !response.isEmpty() && 
+				   !response.equalsIgnoreCase("null") && 
+				   !response.equalsIgnoreCase("nil")) {
+					return response;
+				}
+			}
 		} catch (Exception e) { }
-		return address.substring(0, 8);
+		return simplifyEthAddress(address);
 	}
 	
 	/**
