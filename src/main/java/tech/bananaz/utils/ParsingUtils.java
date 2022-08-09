@@ -16,7 +16,8 @@ public class ParsingUtils {
 	
 	// Private
 	private static final String ETHERSCAN_URL    = "https://etherscan.io/address/";
-	private static final String SOLSCAN_URL      = "https://solscan.io/address/";
+	/* private static final String SOLSCAN_URL      = "https://solscan.io/address/"; */
+	private static final String OPENSEA_URL 	 = "https://opensea.io/";
 	private static ENSUtils ensUtils   		     = new ENSUtils();
 	private static StringUtils sUtils			 = new StringUtils();
 	private static CryptoConvertUtils convert    = new CryptoConvertUtils();
@@ -177,19 +178,28 @@ public class ParsingUtils {
 			cryptoType 	   = Ticker.fromString(paymentToken.getAsString("symbol"));
 			usdOfPayment   = paymentToken.getAsString("usd_price");
 			decimals       = Integer.valueOf(paymentToken.getAsString("decimals"));
-			sellerUrl	   = String.format("%s%s", ETHERSCAN_URL, sellerWalletAddy);
+			sellerUrl	   = String.format("%s%s", OPENSEA_URL, sellerWalletAddy);
 			// Grab the buyer URL if this event is a sale
 			if(eventType.equals(EventType.SALE)) 
-				buyerUrl = String.format("%s%s", ETHERSCAN_URL, buyerWalletAddy);
+				buyerUrl = String.format("%s%s", OPENSEA_URL, buyerWalletAddy);
 		} else {
 			// Process SOL on OpenSea
 			if(c.getSolanaOnOpensea()) {
 				cryptoType = Ticker.SOL;
 				decimals   = CryptoConvertUtils.Unit.SOL.getDecimal();
-				sellerUrl  = String.format("%s%s", SOLSCAN_URL, sellerWalletAddy);
+				sellerUrl  = String.format("%s%s", OPENSEA_URL, sellerWalletAddy);
 				// Grab the buyer URL if this event is a sale
 				if(eventType.equals(EventType.SALE)) 
-					buyerUrl = String.format("%s%s", SOLSCAN_URL, buyerWalletAddy);
+					buyerUrl = String.format("%s%s", OPENSEA_URL, buyerWalletAddy);
+			}
+			// Process POLY on OpenSea
+			if(c.getPolygonOnOpensea()) {
+				cryptoType = Ticker.ETH;
+				decimals   = CryptoConvertUtils.Unit.ETH.getDecimal();
+				sellerUrl  = String.format("%s%s", OPENSEA_URL, sellerWalletAddy);
+				// Grab the buyer URL if this event is a sale
+				if(eventType.equals(EventType.SALE)) 
+					buyerUrl = String.format("%s%s", OPENSEA_URL, buyerWalletAddy);
 			}
 		}
 
