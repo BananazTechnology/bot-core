@@ -45,6 +45,8 @@ public class Config {
 	private Boolean isSlug;
 	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 0")
 	private Boolean solanaOnOpensea;
+	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 0")
+	private Boolean polygonOnOpensea;
 	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 1")
 	private Boolean active;
 
