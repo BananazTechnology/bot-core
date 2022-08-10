@@ -160,8 +160,8 @@ public class ParsingUtils {
 		if(nonNull(buyerObj)) {
 			JSONObject buyerUser = (JSONObject) buyerObj.get("user");
 			eventType = EventType.SALE;
-			buyerName = sUtils.tryUsernameOrFormatAddress(buyerUser, buyerWalletAddy);
 			buyerWalletAddy = buyerObj.getAsString("address");
+			buyerName = sUtils.tryUsernameOrFormatAddress(buyerUser, buyerWalletAddy);
 		}
 		
 		// Get price info from body 
