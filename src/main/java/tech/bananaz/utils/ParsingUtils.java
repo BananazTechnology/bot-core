@@ -48,7 +48,7 @@ public class ParsingUtils {
 		
 		// Listing
 		// Get seller information in all cases
-		EventType eventType 	 = EventType.LISTING; // Listing by default
+		EventType eventType 	 = EventType.LIST; // Listing by default
 		String  sellerWalletAddy = looksRareEvent.getAsString("from");
 		String  ensSeller        = null;
 		try {
@@ -101,7 +101,7 @@ public class ParsingUtils {
 		e.setCollectionName(collectionName);
 		e.setSlug(slug);
 		e.setImageUrl(imageUrl);
-		e.setPermalink(permalink);
+		e.setLink(permalink);
 		e.setQuantity(quantity);
 		e.setSellerWalletAddy(sellerWalletAddy);
 		e.setSellerName(sellerName);
@@ -142,7 +142,7 @@ public class ParsingUtils {
 		Integer quantity 	    = Integer.valueOf(openSeaEvent.getAsString("quantity"));
 		String sellerWalletAddy = sellerObj.getAsString("address");
 		String sellerName	  	= sUtils.tryUsernameOrFormatAddress(sellerUser, sellerWalletAddy);
-		EventType eventType 	= EventType.LISTING; // Listing by default
+		EventType eventType 	= EventType.LIST; // Listing by default
 		
 		// Process time events, need this for certain sales
 		try {
@@ -169,7 +169,7 @@ public class ParsingUtils {
 		String usdOfPayment = null;
 		Ticker cryptoType = null;
 		String sellerUrl = null;
-		String priceInWei = (eventType.equals(EventType.LISTING)) ? 
+		String priceInWei = (eventType.equals(EventType.LIST)) ? 
 								openSeaEvent.getAsString("starting_price") : // If Listing
 									openSeaEvent.getAsString("total_price"); // If Sale
 		
@@ -253,7 +253,7 @@ public class ParsingUtils {
 		e.setSlug(slug);
 		e.setImageUrl(imageUrl);
 		e.setCollectionImageUrl(collectionImageUrl);
-		e.setPermalink(permalink);
+		e.setLink(permalink);
 		e.setQuantity(quantity);
 		e.setSellerWalletAddy(sellerWalletAddy);
 		e.setSellerName(sellerName);

@@ -5,9 +5,12 @@ import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.minidev.json.JSONObject;
 import tech.bananaz.enums.Ticker;
-
+import tech.bananaz.models.Event;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import java.math.BigDecimal;
@@ -16,6 +19,8 @@ public class StringUtils {
 	
 	private static final DecimalFormat dFormat  = new DecimalFormat("####,###,###.00");
 	private static final int MAXHASHTAGS = 4;
+	private final static String BRAIL_BLANK = "⠀";
+	private final static String NEWLINE = "\n";
 
 	/**
 	 * This is a helper method, in this method you can supply a valid 
@@ -184,5 +189,73 @@ public class StringUtils {
 	    }
 	    String loc = str.toLowerCase();
 	    return loc.substring(0, 1).toUpperCase() + loc.substring(1);
+	}
+	
+	/**
+	 * Formats data from an Event into a string template.
+	 * The way to represent data from the Event in the template is described in a 3 different parts
+	 * 1.) Defining a new function which is by using colons in the format :x: where x is described in #2
+	 * 2.) A non-case-specific variable from Event, no spaces
+	 * 
+	 * Some specific things to know:
+	 * - use each value only ONCE in the template
+	 * - newlines must be entered into string as \n
+	 * - priceInCrypto renders with the crypto symbol appended directly at the end like 100Ξ
+	 * - priceInUsd displays as USD format rounded to the penny with commas,
+	 *     when not null USD is rendered as ($1,234.56) with parentheses and dollar sign
+	 * 
+	 * @param template
+	 * @param e
+	 * @return string formatted
+	 */
+	@SuppressWarnings("unchecked")
+	public static String stringTemplateFormatEvent(String template, Event e) {
+		// Dont use template, use this
+		final String templateCleaned = template.strip().trim();
+		// Temp variable to store changes while parsing Event
+		String buffer = templateCleaned;
+		// Event to Map for simple k/v parsing
+		ObjectMapper objMapper = new ObjectMapper();
+		Map < String, Object > eventMap = objMapper.convertValue(e, Map.class);
+		// Loop through keys of event
+		for(Entry<String, Object> eventKeyValues : eventMap.entrySet()) {
+			// The best way to compare is to always use same case
+			// we take lower-case of buffer and lower-case our key and surround with our colons
+			// Example: 
+			// - keyLC = abcd
+			// - keyTemplateLC = :abcd:
+			final String keyLC = eventKeyValues.getKey().toLowerCase();
+			final String keyTemplateLC = String.format(":%s:", keyLC);
+			final String bufferLC = buffer.toLowerCase();
+			// If lower-case buffer contains our value :abcd:
+			if(bufferLC.contains(keyTemplateLC)) {
+				// Get the position in the string of our key
+				int keyStart = bufferLC.indexOf(keyTemplateLC);
+				int keyEnd = keyStart+keyTemplateLC.length();
+				// Select out the proper capitalization used by selecting exact position
+				// By doing all our previous login in lower-case we can accept functions as case insensitive
+				// By selecting this value as exact case provided we can run a simpler replace method
+				String keyInTemplate = buffer.substring(keyStart, keyEnd);
+				// We use the if statements below to perform special formatting on currencies
+				// Price In Crypto
+				if(keyLC.equalsIgnoreCase("priceInCrypto")) 
+					buffer = buffer.replace(keyInTemplate, String.format("%s%s", e.getPriceInCrypto(), e.getCryptoType().getSymbol()));
+				// Price In USD
+				else if(keyLC.equalsIgnoreCase("priceInUsd")) {
+					if(nonNull(e.getPriceInUsd()))
+						buffer = buffer.replace(keyInTemplate, String.format("($%s)", dFormat.format(e.getPriceInUsd().doubleValue())));
+					else 
+						buffer = buffer.replace(keyInTemplate, "");
+				}
+				// This last else formats all other values
+				else
+					buffer = buffer.replace(keyInTemplate, String.format("%s", eventKeyValues.getValue()));
+			}
+		}
+		// Prep outbound response default is null
+		String outbound = null;
+		// Append our special ending values
+		if(!templateCleaned.equalsIgnoreCase(buffer)) outbound = (buffer + BRAIL_BLANK + NEWLINE);
+		return outbound;
 	}
 }

@@ -1,7 +1,7 @@
 package tech.bananaz.enums;
 
 public enum EventType {
-	LISTING,
+	LIST,
 	SALE,
 	MINT,
 	BURN
