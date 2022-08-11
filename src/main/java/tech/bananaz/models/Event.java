@@ -41,7 +41,7 @@ public class Event implements Comparable<Event> {
 	private String       slug;
 	private String       imageUrl;
 	@Column(columnDefinition = "VARCHAR(127)")
-	private String       permalink;
+	private String       link;
 	private int	         quantity;
 	@Column(columnDefinition = "VARCHAR(50)")
 	private String       sellerWalletAddy;
@@ -60,7 +60,7 @@ public class Event implements Comparable<Event> {
 	@Enumerated( EnumType.STRING )
 	@Column(columnDefinition = "VARCHAR(50)")
 	private RarityEngine rarityEngine;
-	@Column(columnDefinition = "VARCHAR(50)")
+	@Column(columnDefinition = "VARCHAR(350)")
 	private String       rarityUrl;
 	@Column(columnDefinition = "VARCHAR(25)")
 	private BigDecimal   priceInCrypto;

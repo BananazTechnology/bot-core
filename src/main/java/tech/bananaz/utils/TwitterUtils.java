@@ -46,7 +46,7 @@ public class TwitterUtils {
 				event.getName() + NEWLINE +
 				finalRarity +
 				capitalizeFirstLetter(event.getEventType().toString()) + " for " + sUtils.pricelineFormat(event.getPriceInCrypto(), event.getCryptoType(), event.getPriceInUsd()) + NEWLINE +
-				event.getPermalink() + BRAIL_BLANK + NEWLINE)
+				event.getLink() + BRAIL_BLANK + NEWLINE)
 			;
 		}
 	}

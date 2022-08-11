@@ -84,7 +84,7 @@ public class DiscordUtils {
 					   "**Amount** " + sUtils.pricelineFormat(event.getPriceInCrypto(), event.getCryptoType(), event.getPriceInUsd()) + NEWLINE +
 					   buyerText +
 					   "**Seller** " + String.format("[`%s`](%s) \n", event.getSellerName(), event.getSellerUrl()) +
-					   "**Link**   " + String.format("[Click Here](%s)", event.getPermalink())
+					   "**Link**   " + String.format("[Click Here](%s)", event.getLink())
 				   )
 				.setTimestamp(event.getCreatedDate())
 				.setFooter(CREATORNAME, FOOTERIMAGEICO);
