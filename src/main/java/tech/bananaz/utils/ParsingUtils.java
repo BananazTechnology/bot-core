@@ -11,6 +11,7 @@ import tech.bananaz.models.Config;
 import tech.bananaz.models.Event;
 import tech.bananaz.models.Rarity;
 import tech.bananaz.utils.CryptoConvertUtils.Unit;
+import static tech.bananaz.utils.StringUtils.*;
 
 public class ParsingUtils {
 	
@@ -19,7 +20,6 @@ public class ParsingUtils {
 	/* private static final String SOLSCAN_URL      = "https://solscan.io/address/"; */
 	private static final String OPENSEA_URL 	 = "https://opensea.io/";
 	private static ENSUtils ensUtils   		     = new ENSUtils();
-	private static StringUtils sUtils			 = new StringUtils();
 	private static CryptoConvertUtils convert    = new CryptoConvertUtils();
 	private static RarityUtils rUtils   		 = new RarityUtils();
 	private static CryptoValueLookup valueLookup = new CryptoValueLookup();
@@ -54,7 +54,7 @@ public class ParsingUtils {
 		try {
 			ensSeller 		     = ensUtils.getENS(sellerWalletAddy);
 		} catch (Exception ex) {}
-		String sellerName	  	 = (nonNull(ensSeller)) ? ensSeller : sUtils.simplifyEthAddress(sellerWalletAddy);
+		String sellerName	  	 = (nonNull(ensSeller)) ? ensSeller : simplifyEthAddress(sellerWalletAddy);
 		String sellerUrl		 = String.format("%s%s", ETHERSCAN_URL, sellerWalletAddy);
 		
 		// Sale
@@ -68,7 +68,7 @@ public class ParsingUtils {
 			try {
 				ensBuyer 		 = ensUtils.getENS(buyerWalletAddy);
 			} catch (Exception ex) {}
-			buyerName	  	     = (nonNull(ensBuyer)) ? ensSeller : sUtils.simplifyEthAddress(buyerWalletAddy);
+			buyerName	  	     = (nonNull(ensBuyer)) ? ensSeller : simplifyEthAddress(buyerWalletAddy);
 			buyerUrl		     = String.format("%s%s", ETHERSCAN_URL, buyerWalletAddy);
 		}
 		
@@ -81,7 +81,7 @@ public class ParsingUtils {
 		Rarity r = rUtils.getRarity(c.getContractAddress(), raritySlug, tokenId, c.getAutoRarity());
 		
 		// Name formatting for when null
-		name = sUtils.buildNftDisplayName(name, collectionName, tokenId);
+		name = buildNftDisplayName(name, collectionName, tokenId);
 		
 		// Calculate USD
 		Ticker ticker = Ticker.ETH;
@@ -141,7 +141,7 @@ public class ParsingUtils {
 		Instant endTime		    = null;
 		Integer quantity 	    = Integer.valueOf(openSeaEvent.getAsString("quantity"));
 		String sellerWalletAddy = sellerObj.getAsString("address");
-		String sellerName	  	= sUtils.tryUsernameOrFormatAddress(sellerUser, sellerWalletAddy);
+		String sellerName	  	= tryUsernameOrFormatAddress(sellerUser, sellerWalletAddy);
 		EventType eventType 	= EventType.LIST; // Listing by default
 		
 		// Process time events, need this for certain sales
@@ -161,7 +161,7 @@ public class ParsingUtils {
 			JSONObject buyerUser = (JSONObject) buyerObj.get("user");
 			eventType = EventType.SALE;
 			buyerWalletAddy = buyerObj.getAsString("address");
-			buyerName = sUtils.tryUsernameOrFormatAddress(buyerUser, buyerWalletAddy);
+			buyerName = tryUsernameOrFormatAddress(buyerUser, buyerWalletAddy);
 		}
 		
 		// Get price info from body 
@@ -206,21 +206,23 @@ public class ParsingUtils {
 		// Support for OpenSea bundles,
 		// Asset var will be empty and this asset_bundle will have data
 		JSONObject assetBundleObj   = (JSONObject) openSeaEvent.get("asset_bundle");
-		JSONObject assetInfo = (nonNull(asset)) ? asset : (JSONObject) assetBundleObj.get("asset_contract");
+		JSONObject assetInfo = (nonNull(asset)) ? asset : assetBundleObj;
 			
 		// Get important values from the assets
 		String name 		  	  = assetInfo.getAsString("name");
-		String tokenId 		  	  = (nonNull(assetInfo.getAsString("token_id"))) ? assetInfo.getAsString("token_id") : "0";
-		String imageUrl 	  	  = (nonNull(assetInfo.getAsString("image_preview_url"))) ? assetInfo.getAsString("image_preview_url") : "";
+		String tokenId 		  	  = (nonNull(assetInfo.getAsString("token_id"))) ? assetInfo.getAsString("token_id") : null;
+		String imageUrl 	  	  = (nonNull(assetInfo.getAsString("image_preview_url"))) ? assetInfo.getAsString("image_preview_url") : null;
 		String permalink 	  	  = assetInfo.getAsString("permalink");
 
-		JSONObject collection     = (JSONObject) assetInfo.get("collection");
+		JSONObject collectionObj  = (JSONObject) assetInfo.get("collection");
+		JSONObject collecObj4Bund = (JSONObject) assetInfo.get("asset_contract");
+		JSONObject collection	  = (nonNull(collectionObj)) ? collectionObj : collecObj4Bund;
 		String collectionName 	  = collection.getAsString("name");
 		String collectionImageUrl = collection.getAsString("image_url");
 		String slug			      = collection.getAsString("slug");
 		
 		// Name formatting for when null
-		name = sUtils.buildNftDisplayName(name, collectionName, tokenId);
+		name = buildNftDisplayName(name, collectionName, tokenId);
 		
 		// Make calculations about price
 		BigDecimal priceInCrypto = convert.convertToCrypto(priceInWei, decimals);
@@ -251,7 +253,7 @@ public class ParsingUtils {
 		e.setTokenId(tokenId);
 		e.setCollectionName(collectionName);
 		e.setSlug(slug);
-		e.setImageUrl(imageUrl);
+		e.setImageUrl(chooseImageUrl(imageUrl, collectionImageUrl));
 		e.setCollectionImageUrl(collectionImageUrl);
 		e.setLink(permalink);
 		e.setQuantity(quantity);

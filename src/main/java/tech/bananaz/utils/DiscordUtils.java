@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import tech.bananaz.models.Config;
 import tech.bananaz.models.DiscordConfig;
 import tech.bananaz.models.Event;
-import static tech.bananaz.utils.StringUtils.capitalizeFirstLetter;
+import static tech.bananaz.utils.StringUtils.*;
 import static java.util.Objects.nonNull;
 import static java.util.Objects.isNull;
 import java.awt.Color;
@@ -29,7 +29,6 @@ public class DiscordUtils {
 	private static final String CREATORNAME    = "@BananazTech";
 	private static final String FOOTERIMAGEICO = "https://raw.githubusercontent.com/BananazTechnology/bananaz-assets/main/assets/navLogo.png";
 	private static final Logger LOGGER  	   = LoggerFactory.getLogger(DiscordUtils.class);
-	private StringUtils sUtils 				   = new StringUtils();
 	
 	public DiscordUtils(DiscordConfig config) {
 		if(nonNull(config.getDiscordToken()) && nonNull(config.getChannelId())) {
@@ -66,13 +65,16 @@ public class DiscordUtils {
 				(nonNull(event.getRarity())) ? 
 					String.format("**Rank** [%s](%s) on %s \n", event.getRarity(), event.getRarityUrl(), event.getRarityEngine().getDisplayName()) : 
 					"";
+			
 			// Build title
 			String title = String.format("%s %s! (%s)", 
 											event.getName(), 
-											capitalizeFirstLetter(event.getEventType().toString()), 
+											capitalizeFirstLetter(event.getEventType().getVerb()), 
 											event.getMarket().getSlug());
+			
 			// Set buyer field for a sale or blank
 			String buyerText = (nonNull(event.getBuyerWalletAddy())) ?  "**Buyer**  " + String.format("[`%s`](%s) \n", event.getBuyerName(), event.getBuyerUrl()) : "";
+			
 			// Build embed
 			EmbedBuilder newMsg = new EmbedBuilder()
 				.setColor(this.color)
@@ -81,7 +83,7 @@ public class DiscordUtils {
 				.setDescription(
 						finalRarity + 
 					   ((event.getQuantity() > 1) ? "**Bundle** " + event.getQuantity() + "x \n" : "") +
-					   "**Amount** " + sUtils.pricelineFormat(event.getPriceInCrypto(), event.getCryptoType(), event.getPriceInUsd()) + NEWLINE +
+					   "**Amount** " + pricelineFormat(event.getPriceInCrypto(), event.getCryptoType(), event.getPriceInUsd()) + NEWLINE +
 					   buyerText +
 					   "**Seller** " + String.format("[`%s`](%s) \n", event.getSellerName(), event.getSellerUrl()) +
 					   "**Link**   " + String.format("[Click Here](%s)", event.getLink())
@@ -89,6 +91,7 @@ public class DiscordUtils {
 				.setTimestamp(event.getCreatedDate())
 				.setFooter(CREATORNAME, FOOTERIMAGEICO);
 			
+			// Send
 			new MessageBuilder().setEmbed(newMsg).send(this.channel);
 		}
 	}

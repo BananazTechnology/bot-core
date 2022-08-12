@@ -9,7 +9,6 @@ import com.github.redouane59.twitter.signature.*;
 import static tech.bananaz.utils.StringUtils.determineFileType;
 import static tech.bananaz.utils.StringUtils.stringTemplateFormatEvent;
 import static tech.bananaz.utils.UrlUtils.imageUrlToBytes;
-import tech.bananaz.enums.EventType;
 import tech.bananaz.models.Config;
 import tech.bananaz.models.Event;
 import tech.bananaz.models.TwitterConfig;
@@ -46,10 +45,9 @@ public class TwitterUtils {
 		logSend();
 		if(this.bot != null) { 
 			// Since our template formatting fork we need defaults
-			final String defaultEvent = (event.getEventType().equals(EventType.LIST)) ? "Listed" : "Sold";
 			final String defaultTemplate = ":name:\n%s%s for :priceInCrypto: :priceInUsd:\n:link:";
-			final String defaultRarity = (nonNull(event.getRarity())) ? String.format("rank %s on rarity tools %s", event.getRarity(), NEWLINE) : "";
-			String template = String.format(defaultTemplate, defaultRarity, defaultEvent);
+			final String defaultRarity = (nonNull(event.getRarity())) ? String.format("Rank %s on rarity tools %s", event.getRarity(), NEWLINE) : "";
+			String template = String.format(defaultTemplate, defaultRarity, event.getEventType().getVerb());
 			String imageAttachmentId = null;
 			
 			// If our Twitter Template is not null, not empty and not blank then grab it
