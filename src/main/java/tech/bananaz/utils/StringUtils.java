@@ -42,7 +42,7 @@ public class StringUtils {
 		return newURI;
 	}
 	
-	public String addressSimple(String address, String bidderENSLookup) throws NullPointerException {
+	public static String addressSimple(String address, String bidderENSLookup) throws NullPointerException {
 		String returnString;
 		returnString = (address.equals(bidderENSLookup)) ? address.substring(0, 8) : bidderENSLookup;
 		return returnString;
@@ -114,7 +114,7 @@ public class StringUtils {
 	 * @param priceInUsd
 	 * @return
 	 */
-	public String pricelineFormat(BigDecimal priceInCrypto, Ticker cryptoPaymentType, BigDecimal priceInUsd) {
+	public static String pricelineFormat(BigDecimal priceInCrypto, Ticker cryptoPaymentType, BigDecimal priceInUsd) {
 		String cryptoValue = (nonNull(priceInCrypto)) ? String.format("%s", priceInCrypto) : "NULL";
 		String paymentType = (nonNull(cryptoPaymentType)) ? cryptoPaymentType.getSymbol() : "";
 		String usdValue    = (nonNull(priceInUsd)) ? String.format("($%s)", dFormat.format(priceInUsd.doubleValue())) : "";
@@ -129,7 +129,7 @@ public class StringUtils {
 	 * @return
 	 * @throws NullPointerException Specify this to handle
 	 */
-	public String buildNftDisplayName(String nftName, String collectionName, String tokenId) throws NullPointerException {
+	public static String buildNftDisplayName(String nftName, String collectionName, String tokenId) throws NullPointerException {
 		return (nonNull(nftName)) ? nftName : collectionName + " #" + tokenId;
 	}
 	
@@ -140,7 +140,7 @@ public class StringUtils {
 	 * @return
 	 * @throws NullPointerException Specify this to handle
 	 */
-	public String tryUsernameOrFormatAddress(JSONObject data, String address) throws NullPointerException {
+	public  static String tryUsernameOrFormatAddress(JSONObject data, String address) throws NullPointerException {
 		try {
 			String response = data.getAsString("username");
 			if(nonNull(response)) {
@@ -160,7 +160,7 @@ public class StringUtils {
 	 * @param address
 	 * @return
 	 */
-	public String simplifyEthAddress(String address) {
+	public static String simplifyEthAddress(String address) {
 		return address.substring(0, 8);
 	}
 	
@@ -170,7 +170,7 @@ public class StringUtils {
 	 * @param collectionImageUrl
 	 * @return
 	 */
-	public String chooseImageUrl(String imageUrl, String collectionImageUrl) {
+	public static String chooseImageUrl(String imageUrl, String collectionImageUrl) {
 		if(isNull(imageUrl)) return collectionImageUrl;
 		if(nonNull(imageUrl)) {
 			if(imageUrl.contains(".svg") || imageUrl.isBlank() || imageUrl.isEmpty()) {
