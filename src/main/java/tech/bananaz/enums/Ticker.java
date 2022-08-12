@@ -1,6 +1,7 @@
 package tech.bananaz.enums;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
 public enum Ticker {
@@ -9,19 +10,22 @@ public enum Ticker {
     BTC("btc", "₿"),
     DAI("dai", "◈"),
     SOL("sol", "◎");
-
+	
+	@Getter
     private String ticker;
+    @Getter
     private String symbol;
-
-    public String getSymbol() {
-        return symbol;
-    }
 
     @Override
     public String toString() {
-        return ticker;
+        return this.symbol;
     }
 
+    /**
+     * For comparison here we match against the ticker ETH, BTC, SOL
+     * @param ticker
+     * @return
+     */
     public static Ticker fromString(String ticker) {
         if (ticker != null) {
             for (Ticker unit : Ticker.values()) {

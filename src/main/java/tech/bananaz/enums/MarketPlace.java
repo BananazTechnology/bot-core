@@ -15,9 +15,14 @@ public enum MarketPlace {
 
     @Override
     public String toString() {
-        return this.displayName;
+        return this.slug;
     }
 
+    /**
+     * unused but would match on displayName 
+     * @param displayName
+     * @return
+     */
     public static MarketPlace fromString(String displayName) {
     	for (MarketPlace unit : MarketPlace.values()) {
             if (displayName.equalsIgnoreCase(unit.displayName)) {

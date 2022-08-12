@@ -1,6 +1,10 @@
 package tech.bananaz.utils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -51,5 +55,29 @@ public class UrlUtils {
 		}
 		LOGGER.debug(String.format("GET request took %sms", Long.valueOf(endTime-startTime).toString()));
 		return newResponse;
+	}
+	
+	public static byte[] imageUrlToBytes(String url) {
+		byte[] output = null;
+		URL addy = null;
+		try {
+			InputStream is = null;
+			try {
+				addy = new URL(url);
+				is = addy.openStream ();
+				output = IOUtils.toByteArray(is);
+			}
+			catch (IOException e) {
+				System.err.printf ("Failed while reading bytes from %s: %s", addy.toExternalForm(), e.getMessage());
+				// Perform any other exception handling that's appropriate.
+			}
+			finally {
+				if (is != null) is.close();
+			}
+		} catch(IOException ex) {
+			System.err.printf ("Failed while reading bytes from %s: %s", addy.toExternalForm(), ex.getMessage());
+			// Perform any other exception handling that's appropriate.
+		}
+		return output;
 	}
 }

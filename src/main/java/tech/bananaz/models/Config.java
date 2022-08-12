@@ -28,26 +28,27 @@ public class Config {
 	private String  twitterApiKeySecret;
 	private String  twitterAccessToken;
 	private String  twitterAccessTokenSecret;
-	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 1")
+	private String  twitterMessageTemplate;
+	@Column(nullable = false, columnDefinition = "TINYINT(1) UNSIGNED DEFAULT 1")
 	private Boolean showBundles;
-	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 0")
+	@Column(nullable = false, columnDefinition = "TINYINT(1) UNSIGNED DEFAULT 0")
 	private Boolean autoRarity;
 	private String  raritySlugOverwrite;
-	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 0")
+	@Column(nullable = false, columnDefinition = "TINYINT(1) UNSIGNED DEFAULT 0")
 	private Boolean excludeOpensea;
-	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 0")
+	@Column(nullable = false, columnDefinition = "TINYINT(1) UNSIGNED DEFAULT 0")
 	private Boolean excludeLooksrare;
-	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 0")
+	@Column(nullable = false, columnDefinition = "TINYINT(1) UNSIGNED DEFAULT 0")
 	private Boolean excludeDiscord;
-	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 0")
+	@Column(nullable = false, columnDefinition = "TINYINT(1) UNSIGNED DEFAULT 0")
 	private Boolean excludeTwitter;
-	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 0")
+	@Column(nullable = false, columnDefinition = "TINYINT(1) UNSIGNED DEFAULT 0")
 	private Boolean isSlug;
-	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 0")
+	@Column(nullable = false, columnDefinition = "TINYINT(1) UNSIGNED DEFAULT 0")
 	private Boolean solanaOnOpensea;
-	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 0")
+	@Column(nullable = false, columnDefinition = "TINYINT(1) UNSIGNED DEFAULT 0")
 	private Boolean polygonOnOpensea;
-	@Column(nullable = false, columnDefinition="TINYINT(1) UNSIGNED DEFAULT 1")
+	@Column(nullable = false, columnDefinition = "TINYINT(1) UNSIGNED DEFAULT 1")
 	private Boolean active;
 
 }

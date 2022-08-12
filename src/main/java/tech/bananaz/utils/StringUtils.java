@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.redouane59.twitter.dto.tweet.MediaCategory;
+
 import net.minidev.json.JSONObject;
 import tech.bananaz.enums.Ticker;
 import tech.bananaz.models.Event;
@@ -195,7 +197,7 @@ public class StringUtils {
 	 * Formats data from an Event into a string template.
 	 * The way to represent data from the Event in the template is described in a 3 different parts
 	 * 1.) Defining a new function which is by using colons in the format :x: where x is described in #2
-	 * 2.) A non-case-specific variable from Event, no spaces
+	 * 2.) A non-case-sensitive variable from Event, no spaces
 	 * 
 	 * Some specific things to know:
 	 * - use each value only ONCE in the template
@@ -257,5 +259,18 @@ public class StringUtils {
 		// Append our special ending values
 		if(!templateCleaned.equalsIgnoreCase(buffer)) outbound = (buffer + BRAIL_BLANK + NEWLINE);
 		return outbound;
+	}
+
+	/**
+	 * Determines the Twitter MediaCatagory type by analyzing a URL
+	 * @param url
+	 * @return
+	 */
+	public static MediaCategory determineFileType(String url) {
+		// Assume everything is an image
+		MediaCategory output = MediaCategory.TWEET_IMAGE;
+		// Only update the default if the image is a GIF
+		if(url.contains(".gif")) output = MediaCategory.TWEET_GIF;
+		return output;
 	}
 }
