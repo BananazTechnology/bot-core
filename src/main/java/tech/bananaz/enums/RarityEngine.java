@@ -9,6 +9,7 @@ public enum RarityEngine {
     RARITY_SNIPER("raritysniper", "https://raritysniper.com/%s/%s", "raritysniper.com"),
     TRAIT_SNIPER("traitsniper", "https://app.traitsniper.com/%s?view=%s", "traitsniper.com");
 
+	@Getter
     private String engineSlug;
     @Getter
     private String url;
@@ -20,6 +21,11 @@ public enum RarityEngine {
         return this.engineSlug;
     }
 
+    /**
+     * Matches from the engineSlug value
+     * @param engineSlug
+     * @return
+     */
     public static RarityEngine fromString(String engineSlug) {
     	for (RarityEngine unit : RarityEngine.values()) {
             if (engineSlug.equalsIgnoreCase(unit.engineSlug)) {

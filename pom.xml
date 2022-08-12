@@ -12,7 +12,7 @@
 
   <groupId>tech.bananaz</groupId>
   <artifactId>bot-core</artifactId>
-  <version>1.4.0</version>
+  <version>1.5.0</version>
 
   <name>bot-core</name>
   <description>An @apache Maven library for all core/base project resources</description>
@@ -57,17 +57,24 @@
     
     <!-- Discord -->    
 	<dependency>
-	    <groupId>org.javacord</groupId>
-	    <artifactId>javacord</artifactId>
-	    <version>3.3.2</version>
-	    <type>pom</type>
+	  <groupId>org.javacord</groupId>
+	  <artifactId>javacord</artifactId>
+	  <version>3.3.2</version>
+	  <type>pom</type>
 	</dependency>
 	
 	<!-- Twitter -->
 	<dependency>
-	    <groupId>com.github.redouane59.twitter</groupId>
-	    <artifactId>twittered</artifactId>
-	    <version>1.26</version>
+	  <groupId>com.github.redouane59.twitter</groupId>
+	  <artifactId>twittered</artifactId>
+	  <version>1.26</version>
+	</dependency>
+		
+	<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+	<dependency>
+	  <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+	  <version>2.11.0</version>
 	</dependency>
   </dependencies>
   
