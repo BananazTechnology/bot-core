@@ -111,6 +111,11 @@ public class DiscordUtils {
 		return false;
 	}
 
+	public String getServerTextChannel() {
+		if(nonNull(this.channel)) return this.channel.getIdAsString();
+		return null;
+	}
+
 	public void setServerTextChannel(String id) {
 		if(nonNull(this.bot)) this.channel = this.bot.getChannelById(id).get().asServerTextChannel().get();
 	}
