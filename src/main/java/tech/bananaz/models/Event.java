@@ -75,7 +75,7 @@ public class Event implements Comparable<Event> {
 	@Enumerated( EnumType.STRING )
 	@Column(columnDefinition = "VARCHAR(50)")
 	private MarketPlace  market;
-	@Column(columnDefinition = "VARCHAR(127)")
+	@Column(columnDefinition = "VARCHAR(175)")
 	private String		 hash;
 	// These last few items are for the consumer
 	private long         configId;
@@ -85,9 +85,9 @@ public class Event implements Comparable<Event> {
 	private boolean      consumed;
 	
 	public Event() {}
-	
-	public void setHash(String contractAddy, String sellerAddy, String priceInCrypto) {
-		this.hash = String.format("%s:%s:%s", contractAddy, sellerAddy, priceInCrypto);
+
+	public void setHash(MarketPlace market, String contractAddy, String sellerAddy, String priceInCrypto) {
+		this.hash = String.format("%s:%s:%s", market.getSlug(), contractAddy, sellerAddy, priceInCrypto);
 	}
 	
 	@Override

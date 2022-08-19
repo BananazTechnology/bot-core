@@ -119,7 +119,7 @@ public class ParsingUtils {
 		e.setMarket(MarketPlace.LOOKSRARE);
 		e.setConsumed(false);
 		e.setConfigId(c.getId());
-		e.setHash(c.getContractAddress(), sellerWalletAddy, priceInCrypto.toPlainString());
+		e.setHash(MarketPlace.LOOKSRARE, c.getContractAddress(), sellerWalletAddy, priceInCrypto.toPlainString());
 		return e;
 	}
 	
@@ -273,7 +273,7 @@ public class ParsingUtils {
 		e.setMarket(MarketPlace.OPENSEA);
 		e.setConsumed(false);
 		e.setConfigId(c.getId());
-		e.setHash(c.getContractAddress(), sellerWalletAddy, priceInCrypto.toPlainString());
+		e.setHash(MarketPlace.OPENSEA, c.getContractAddress(), sellerWalletAddy, priceInCrypto.toPlainString());
 		return e;
 	}
 }
