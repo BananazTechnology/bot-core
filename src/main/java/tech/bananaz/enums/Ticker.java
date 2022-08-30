@@ -9,7 +9,8 @@ public enum Ticker {
     WETH("weth", "Ξ"),
     BTC("btc", "₿"),
     DAI("dai", "◈"),
-    SOL("sol", "◎");
+    SOL("sol", "◎"),
+    USDC("usdc", "$");
 	
 	@Getter
     private String ticker;

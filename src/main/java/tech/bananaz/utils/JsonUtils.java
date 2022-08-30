@@ -1,7 +1,7 @@
 package tech.bananaz.utils;
 
 import java.util.Map.Entry;
-
+import static java.util.Objects.nonNull;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
@@ -42,33 +42,131 @@ public class JsonUtils {
 		return jsonData;
 	}
 	
-	/*
-	 * This method is used to get a value from a JSONObject.
+	/**
+	 * Parse a JSONObject endlessly for a key within the JSON.
+	 * The matching is only the java contains function an they JSON key 
+	 *     AND your provided key are to lower case.
 	 * 
-	 * @param jsonObject The JSONObject to get the value from.
-	 * @param key The key to get the value from.
-	 * @return The value of the key.
+	 * @param m
+	 * @param key
+	 * @return
 	 */
-	public String searchObjForKey(JSONObject metadata, String key) {
-		String response = "";
-		if(metadata.toJSONString().contains("\""+key+"\"")) {
-			if(metadata.containsKey(key)) return metadata.getAsString(key);
-			for(Entry<String, Object> kv : metadata.entrySet()) {
-				if(kv.getValue().getClass().equals(JSONObject.class)) {
-					String newResponse = searchObjForKey((JSONObject) kv.getValue(), key);
-					if(!newResponse.equals("")) return newResponse;
-				}
-				if(kv.getValue().getClass().equals(JSONArray.class)) {
-					JSONArray value = (JSONArray) kv.getValue();
-					for(int i = 0; i < value.size(); i++) {
-						JSONObject nestedObj = (JSONObject) value.get(i);
-						String newResponse = searchObjForKey(nestedObj, key);
-						if(!newResponse.equals("")) return newResponse;
+	public static String parseObjectForKey(JSONObject m, String key) {
+		String res = null;
+		String objToLc = m.toJSONString().toLowerCase();
+		String keyLc = key.toLowerCase();
+		if(objToLc.contains(keyLc)) {
+			for(Entry<String, Object> kv : m.entrySet()) {
+				String entryKeyLc = kv.getKey().toLowerCase();
+				Object valueType = kv.getValue();
+				if(entryKeyLc.contains(keyLc)) {
+					if(valueType instanceof String ||
+						valueType instanceof Integer || 
+						valueType instanceof Boolean || 
+						valueType instanceof Double) { 
+						String valueToString = String.valueOf(valueType);
+						return valueToString;
+					}
+					if(valueType instanceof JSONArray) {
+						JSONArray value = (JSONArray) kv.getValue();
+						String out = parseArrayForKey(value, keyLc);
+						if(nonNull(out)) return out;
 					}
 				}
 			}
 		}
-		return response;
+		return res;
+	}
+	
+	/**
+	 * This parse JSON array function is simple.
+	 * The allowed items inside an array is only primitives and Objects,
+	 * Since this function only supports finding k/v pairs,
+	 * We only process arrays that have objects in them... this function calls parseObjectForKey.
+	 * 
+	 * Searching is case insensitive and partial with the String contains function.
+	 * 
+	 * @param m
+	 * @param key
+	 * @return
+	 */
+	public static String parseArrayForKey(JSONArray m, String key) {
+		String res = null;
+		String objToLc = m.toJSONString().toLowerCase();
+		String keyLc = key.toLowerCase();
+		if(objToLc.contains(keyLc)) {
+			for(int i = 0; i < m.size(); i++) {
+				Object nestedValue = m.get(i);
+				if(nestedValue instanceof JSONObject) {
+					JSONObject nestedObj = (JSONObject) nestedValue;
+					String out = parseObjectForKey(nestedObj, keyLc);
+					if(nonNull(out)) return out;
+				}
+			}
+		}
+		return res;
+	}
+	
+	public static String findNFTMetadataAttribute(JSONObject m, String key) {
+		String res = null;
+		String objToLc = m.toJSONString().toLowerCase();
+		String keyLc = key.toLowerCase();
+		if(objToLc.contains(keyLc)) {
+			for(Entry<String, Object> kv : m.entrySet()) {
+				Object valueType = kv.getValue();
+				if(valueType instanceof JSONArray) {
+					JSONArray value = (JSONArray) kv.getValue();
+					String out = parseNFTAttributesArray(value, keyLc);
+					if(nonNull(out)) return out;
+				}
+			}
+		}
+		return res;
+	}
+	
+	private static String parseNFTAttributesArray(JSONArray m, String key) {
+		String res = null;
+		String objToLc = m.toJSONString().toLowerCase();
+		String keyLc = key.toLowerCase();
+		if(objToLc.contains(keyLc)) {
+			for(int i = 0; i < m.size(); i++) {
+				Object nestedValue = m.get(i);
+				if(nestedValue instanceof JSONObject) {
+					JSONObject nestedObj = (JSONObject) nestedValue;
+					String out = parseNFTAttributeObject(nestedObj, keyLc);
+					if(nonNull(out)) return out;
+				}
+			}
+		}
+		return res;
+	}
+	
+	private static String parseNFTAttributeObject(JSONObject m, String key) {
+		String res = null;
+		String objToLc = m.toJSONString().toLowerCase();
+		String keyLc = key.toLowerCase();
+		final String[] value_names = {"value"};
+		if(objToLc.contains(keyLc)) {
+			for(Entry<String, Object> kv : m.entrySet()) {
+				String entryKeyLc = kv.getKey().toLowerCase();
+				Object valueType = kv.getValue();
+				// Parse key
+				for( int i=0; i<value_names.length; i++) {
+				    String traitKey = value_names[i].toLowerCase();
+				    if(entryKeyLc.contains(traitKey)) {
+				    	if(valueType instanceof String ||
+							valueType instanceof Integer ||
+							valueType instanceof Long    ||
+							valueType instanceof Boolean || 
+							valueType instanceof Double) { 
+							String valueToString = String.valueOf(valueType);
+							return valueToString;
+						}
+				    }
+				}
+			}
+		}
+		return res;
 	}
 	
 	

@@ -1,6 +1,7 @@
 package tech.bananaz.utils;
 
 import static java.util.Objects.nonNull;
+import static java.util.Objects.isNull;
 import java.math.BigDecimal;
 import java.time.Instant;
 import net.minidev.json.JSONObject;
@@ -45,6 +46,7 @@ public class ParsingUtils {
 		Instant endTime	         = Instant.ofEpochSecond(order.getAsNumber("endTime").longValue());
 		String  imageUrl      	 = token.getAsString("imageURI");
 		String  permalink		 = String.format("https://looksrare.org/collections/%s/%s", c.getContractAddress(), tokenId);
+		String  metadata		 = token.getAsString("tokenURI");
 		
 		// Listing
 		// Get seller information in all cases
@@ -77,8 +79,7 @@ public class ParsingUtils {
 		Integer quantity 	 	 = Integer.valueOf(order.getAsString("amount"));
 		
 		// Rarity lookup
-		String raritySlug = (nonNull(c.getRaritySlugOverwrite())) ? c.getRaritySlugOverwrite() : slug;
-		Rarity r = rUtils.getRarity(c.getContractAddress(), raritySlug, tokenId, c.getAutoRarity());
+		Rarity r = rUtils.getRarity(c.getContractAddress(), slug, tokenId, metadata, c.getRarityEngine());
 		
 		// Name formatting for when null
 		name = buildNftDisplayName(name, collectionName, tokenId);
@@ -120,6 +121,7 @@ public class ParsingUtils {
 		e.setConsumed(false);
 		e.setConfigId(c.getId());
 		e.setHash(MarketPlace.LOOKSRARE, c.getContractAddress(), sellerWalletAddy, priceInCrypto.toPlainString());
+		e.setMetadataUrl(metadata);
 		return e;
 	}
 	
@@ -201,6 +203,9 @@ public class ParsingUtils {
 				if(eventType.equals(EventType.SALE)) 
 					buyerUrl = String.format("%s%s", OPENSEA_URL, buyerWalletAddy);
 			}
+			if(isNull(cryptoType)) {
+				priceInWei = null;
+			}
 		}
 
 		// Support for OpenSea bundles,
@@ -213,6 +218,7 @@ public class ParsingUtils {
 		String tokenId 		  	  = (nonNull(assetInfo.getAsString("token_id"))) ? assetInfo.getAsString("token_id") : null;
 		String imageUrl 	  	  = (nonNull(assetInfo.getAsString("image_preview_url"))) ? assetInfo.getAsString("image_preview_url") : null;
 		String permalink 	  	  = assetInfo.getAsString("permalink");
+		String metadata 	  	  = assetInfo.getAsString("token_metadata");
 
 		JSONObject collectionObj  = (JSONObject) assetInfo.get("collection");
 		JSONObject collecObj4Bund = (JSONObject) assetInfo.get("asset_contract");
@@ -225,11 +231,13 @@ public class ParsingUtils {
 		name = buildNftDisplayName(name, collectionName, tokenId);
 		
 		// Make calculations about price
-		BigDecimal priceInCrypto = convert.convertToCrypto(priceInWei, decimals);
+		BigDecimal priceInCrypto = null;
+		try {
+			priceInCrypto = convert.convertToCrypto(priceInWei, decimals);
+		} catch (Exception ex) {}
 		
 		// Rarity lookup
-		String raritySlug = (nonNull(c.getRaritySlugOverwrite())) ? c.getRaritySlugOverwrite() : slug;
-		Rarity r = rUtils.getRarity(c.getContractAddress(), raritySlug, tokenId, c.getAutoRarity());
+		Rarity r = rUtils.getRarity(c.getContractAddress(), slug, tokenId, metadata, c.getRarityEngine());
 		
 		// Calculate USD
 		BigDecimal priceInUsd = null;
@@ -273,7 +281,8 @@ public class ParsingUtils {
 		e.setMarket(MarketPlace.OPENSEA);
 		e.setConsumed(false);
 		e.setConfigId(c.getId());
-		e.setHash(MarketPlace.OPENSEA, c.getContractAddress(), sellerWalletAddy, priceInCrypto.toPlainString());
+		e.setHash(MarketPlace.OPENSEA, c.getContractAddress(), sellerWalletAddy, String.valueOf(priceInCrypto));
+		e.setMetadataUrl(metadata);
 		return e;
 	}
 }

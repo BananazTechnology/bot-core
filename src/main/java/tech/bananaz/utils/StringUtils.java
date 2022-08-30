@@ -8,9 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.redouane59.twitter.dto.tweet.MediaCategory;
 
 import net.minidev.json.JSONObject;
+import tech.bananaz.enums.RarityEngine;
 import tech.bananaz.enums.Ticker;
 import tech.bananaz.models.Event;
 import static java.util.Objects.isNull;
@@ -218,6 +220,9 @@ public class StringUtils {
 		String buffer = templateCleaned;
 		// Event to Map for simple k/v parsing
 		ObjectMapper objMapper = new ObjectMapper();
+		// To fix Java Instant bug https://stackoverflow.com/a/32202201
+		objMapper.registerModule(new JavaTimeModule());
+		// Convert from object to map of K - V pairs
 		Map < String, Object > eventMap = objMapper.convertValue(e, Map.class);
 		// Loop through keys of event
 		for(Entry<String, Object> eventKeyValues : eventMap.entrySet()) {
@@ -241,7 +246,8 @@ public class StringUtils {
 				// We use the if statements below to perform special formatting on currencies
 				// Price In Crypto
 				if(keyLC.equalsIgnoreCase("priceInCrypto")) 
-					buffer = buffer.replace(keyInTemplate, String.format("%s%s", e.getPriceInCrypto(), e.getCryptoType().getSymbol()));
+					if(nonNull(e.getPriceInCrypto()))
+						buffer = buffer.replace(keyInTemplate, String.format("%s%s", e.getPriceInCrypto(), e.getCryptoType().getSymbol()));
 				// Price In USD
 				else if(keyLC.equalsIgnoreCase("priceInUsd")) {
 					if(nonNull(e.getPriceInUsd()))
@@ -272,5 +278,25 @@ public class StringUtils {
 		// Only update the default if the image is a GIF
 		if(url.contains(".gif")) output = MediaCategory.TWEET_GIF;
 		return output;
+	}
+	
+	/**
+	 * Builds out our rarity URL for social media
+	 * @param event
+	 * @return
+	 */
+	public static String buildRarityString(Event event) {
+		String finalRarity = "";
+		// Only check if the rarity value and source are set... URL can be null
+		if(nonNull(event.getRarity()) && nonNull(event.getRarityEngine())) {
+			String rarityValue = event.getRarity();
+			// Build internal Discord output string
+			String rankRank = 
+				(event.getRarityEngine().equals(RarityEngine.METADATA)) ?
+					String.format("%s", rarityValue) :
+					String.format("[%s](%s) on %s", rarityValue, event.getRarityUrl(), event.getRarityEngine().getDisplayName());
+			finalRarity = String.format("**Rank** %s %s", rankRank, NEWLINE);
+		}
+		return finalRarity;
 	}
 }
