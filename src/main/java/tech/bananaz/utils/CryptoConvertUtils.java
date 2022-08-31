@@ -28,7 +28,8 @@ public class CryptoConvertUtils {
 	public enum Unit {
         ETH("eth", 18),
         WETH("weth", 18),
-        SOL("sol", 9);
+        SOL("sol", 9),
+        USDC("usdc", 6);
 
         private String name;
         private int factor;

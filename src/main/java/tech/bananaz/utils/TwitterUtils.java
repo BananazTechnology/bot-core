@@ -6,6 +6,8 @@ import com.github.redouane59.twitter.TwitterClient;
 import com.github.redouane59.twitter.dto.tweet.MediaCategory;
 import com.github.redouane59.twitter.dto.tweet.UploadMediaResponse;
 import com.github.redouane59.twitter.signature.*;
+
+import static tech.bananaz.utils.StringUtils.buildRarityString;
 import static tech.bananaz.utils.StringUtils.determineFileType;
 import static tech.bananaz.utils.StringUtils.stringTemplateFormatEvent;
 import static tech.bananaz.utils.UrlUtils.imageUrlToBytes;
@@ -17,11 +19,10 @@ import static java.util.Objects.isNull;
 
 public class TwitterUtils {
 	
-	private TwitterClient bot = null;
 	private String apiKey;
 	private String apiSecret;
-	private final static String NEWLINE 	= "\n";
-	private static final Logger LOGGER 	 	= LoggerFactory.getLogger(TwitterUtils.class);
+	private TwitterClient bot          = null;
+	private static final Logger LOGGER = LoggerFactory.getLogger(TwitterUtils.class);
 
 	public TwitterUtils(TwitterConfig config) {
 		if(nonNull(config.getApiKey()) && nonNull(config.getApiSecretKey()) && nonNull(config.getAccessToken())) {
@@ -46,7 +47,8 @@ public class TwitterUtils {
 		if(this.bot != null) { 
 			// Since our template formatting fork we need defaults
 			final String defaultTemplate = ":name:\n%s%s for :priceInCrypto: :priceInUsd:\n:link:";
-			final String defaultRarity = (nonNull(event.getRarity())) ? String.format("Rank %s on rarity tools %s", event.getRarity(), NEWLINE) : "";
+			// Enables features for Auto Rarity and custom rarity clients
+			final String defaultRarity = buildRarityString(event);
 			String template = String.format(defaultTemplate, defaultRarity, event.getEventType().getVerb());
 			String imageAttachmentId = null;
 			

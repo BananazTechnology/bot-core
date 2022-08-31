@@ -75,6 +75,8 @@ public class Event implements Comparable<Event> {
 	@Enumerated( EnumType.STRING )
 	@Column(columnDefinition = "VARCHAR(50)")
 	private MarketPlace  market;
+	@Column(columnDefinition = "VARCHAR(127)")
+	private String       metadataUrl;
 	@Column(columnDefinition = "VARCHAR(175)")
 	private String		 hash;
 	// These last few items are for the consumer
@@ -87,7 +89,7 @@ public class Event implements Comparable<Event> {
 	public Event() {}
 
 	public void setHash(MarketPlace market, String contractAddy, String sellerAddy, String priceInCrypto) {
-		this.hash = String.format("%s:%s:%s", market.getSlug(), contractAddy, sellerAddy, priceInCrypto);
+		this.hash = String.format("%s:%s:%s:%s", market.getSlug(), contractAddy, sellerAddy, priceInCrypto);
 	}
 	
 	@Override

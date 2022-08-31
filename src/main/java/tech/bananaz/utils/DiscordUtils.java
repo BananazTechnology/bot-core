@@ -60,11 +60,9 @@ public class DiscordUtils {
 	public void sendEvent(Event event, Config c) {
 		logSend();
 		if(nonNull(this.bot)) {
-			// Build rarity value
-			String finalRarity = 
-				(nonNull(event.getRarity())) ? 
-					String.format("**Rank** [%s](%s) on %s \n", event.getRarity(), event.getRarityUrl(), event.getRarityEngine().getDisplayName()) : 
-					"";
+			// Enables features for Auto Rarity and custom rarity clients
+			/// Rarity string builder function includes newline response
+			String finalRarity = buildRarityString(event);
 			
 			// Build title
 			String title = String.format("%s %s! (%s)", 
@@ -72,8 +70,16 @@ public class DiscordUtils {
 											capitalizeFirstLetter(event.getEventType().getVerb()), 
 											event.getMarket().getSlug());
 			
+			// Bundle support
+			String bundleText = (event.getQuantity() > 1) ? ("**Bundle** " + event.getQuantity() + "x" + NEWLINE) : "";
 			// Set buyer field for a sale or blank
-			String buyerText = (nonNull(event.getBuyerWalletAddy())) ?  "**Buyer**  " + String.format("[`%s`](%s) \n", event.getBuyerName(), event.getBuyerUrl()) : "";
+			String buyerText  = (nonNull(event.getBuyerWalletAddy())) ?  "**Buyer**  " + String.format("[`%s`](%s) %s", event.getBuyerName(), event.getBuyerUrl(), NEWLINE) : "";
+			// Mones
+			String amountText = (nonNull(event.getPriceInCrypto())) ? ("**Amount** " + pricelineFormat(event.getPriceInCrypto(), event.getCryptoType(), event.getPriceInUsd()) + NEWLINE) : "";
+			// Seller info always exists
+			String sellerText = "**Seller** " + String.format("[`%s`](%s)", event.getSellerName(), event.getSellerUrl());
+			// Link to website
+			String link       = "**Link** " + String.format("[Click Here](%s)", event.getLink());
 			
 			// Build embed
 			EmbedBuilder newMsg = new EmbedBuilder()
@@ -81,12 +87,12 @@ public class DiscordUtils {
 				.setAuthor(title)
 				.setThumbnail(event.getImageUrl())
 				.setDescription(
-						finalRarity + 
-					   ((event.getQuantity() > 1) ? "**Bundle** " + event.getQuantity() + "x \n" : "") +
-					   "**Amount** " + pricelineFormat(event.getPriceInCrypto(), event.getCryptoType(), event.getPriceInUsd()) + NEWLINE +
+					   finalRarity + 
+					   bundleText +
+					   amountText +
 					   buyerText +
-					   "**Seller** " + String.format("[`%s`](%s) \n", event.getSellerName(), event.getSellerUrl()) +
-					   "**Link**   " + String.format("[Click Here](%s)", event.getLink())
+					   sellerText + NEWLINE +
+					   link
 				   )
 				.setTimestamp(event.getCreatedDate())
 				.setFooter(CREATORNAME, FOOTERIMAGEICO);

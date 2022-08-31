@@ -1,31 +1,20 @@
 package tech.bananaz.utils;
 
 import static java.util.Objects.nonNull;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import tech.bananaz.enums.RarityEngine;
 import tech.bananaz.models.Rarity;
+import static tech.bananaz.utils.JsonUtils.findNFTMetadataAttribute;
 
 public class RarityUtils {
 	
-	private static final String DF_API_URL      = "http://proxy.aaronrenner.com/api/rarity/deadfellaz/";
 	private static final String GEISHA_API_URL  = "http://proxy.aaronrenner.com/api/rarity/geisha/";
-	private static final String AUTO_RARITY_URL = "https://api.traitsniper.com/api/projects/%s/nfts?token_id=%s&trait_count=true&trait_norm=true";
+	private static final String TRAIT_SNIPER_URL = "https://api.traitsniper.com/api/projects/%s/nfts?token_id=%s&trait_count=true&trait_norm=true";
+	private static final String RARITY_STRING   = "rarity";
 	private static UrlUtils urlUtils   			= new UrlUtils();
-	
-	private Rarity getDeadfellazRarity(String tokenId) {
-		Rarity rarityCalc = new Rarity();
-		try {
-			JSONObject response = urlUtils.getObjectRequest(DF_API_URL + tokenId, null);
-			rarityCalc.setRarity( response.getAsString("rarity") );
-			rarityCalc.setRarityEngine( RarityEngine.RARITY_TOOLS );
-			rarityCalc.setRarityUrl( String.format(RarityEngine.RARITY_TOOLS.getUrl(), "deadfellaz", tokenId) );
-		} catch (Exception e) {}
-		return rarityCalc;
-	}
 	
 	private Rarity getGeishaRarity(String tokenId) {
 		Rarity rarityCalc = new Rarity();
@@ -38,10 +27,10 @@ public class RarityUtils {
 		return rarityCalc;
 	}
 	
-	private Rarity getAutoRarity(String lookupId, String tokenId) {
+	private Rarity getTraitSniperRarity(String lookupId, String tokenId) {
 		Rarity rarityCalc = new Rarity();
 		try {
-			String buildUrl 		= String.format(AUTO_RARITY_URL, lookupId, tokenId);
+			String buildUrl 		= String.format(TRAIT_SNIPER_URL, lookupId, tokenId);
 			// Add User-Agent for legality
 			HttpHeaders headers 	= new HttpHeaders();
 			headers.add(HttpHeaders.USER_AGENT, "PostmanRuntime/7.29.0");
@@ -56,22 +45,40 @@ public class RarityUtils {
 		return rarityCalc;
 	}
 	
-	public Rarity getRarity(String contractAddress, String slug, String tokenId, boolean autoRarity) {
+
+
+	private Rarity getMetadataRarity(String metadataUrl) {
 		Rarity rarityCalc = new Rarity();
-		// Ensure all variables are set to run rarity checks INCLUDING a null rarity so that we don't make extra HTTP requests
-		if(nonNull(tokenId) && nonNull(slug)) {
-			// Deadfellaz
-			if(slug.equalsIgnoreCase("deadfellaz"))  rarityCalc = getDeadfellazRarity(tokenId);
-			// Super Geisha
-			if(slug.equalsIgnoreCase("supergeisha")) rarityCalc = getGeishaRarity(tokenId);
-			// If auto rarity and rairty has not just been set above
-			if(nonNull(contractAddress) && autoRarity) {
-				rarityCalc = getAutoRarity(contractAddress, tokenId);
+		try {
+			JSONObject response = urlUtils.getObjectRequest(metadataUrl, null);
+			rarityCalc.setRarity( findNFTMetadataAttribute(response, RARITY_STRING) );
+			rarityCalc.setRarityEngine( RarityEngine.METADATA );
+		} catch (Exception e) {}
+		return rarityCalc;
+	}
+	
+	@SuppressWarnings("incomplete-switch")
+	public Rarity getRarity(String contractAddress, String slug, String tokenId, String metadata, RarityEngine re) {
+		Rarity rarityCalc = new Rarity();
+		// Special customers are here in the IF statements
+		if(nonNull(slug))
+			if(slug.equalsIgnoreCase("supergeisha")) return getGeishaRarity(tokenId);
+		
+		if(nonNull(re)) {
+			switch(re) {
+				//
+				// Metadata
+				case METADATA:
+					// Do metadata parsing
+					return getMetadataRarity(metadata);
+				//
+				// Trait Sniper
+				case TRAIT_SNIPER:
+					// If auto rarity and rairty has not just been set above
+					return getTraitSniperRarity(contractAddress, tokenId);
 			}
 		}
 		return rarityCalc;
 	}
-	
-	
 
 }

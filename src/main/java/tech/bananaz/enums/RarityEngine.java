@@ -5,9 +5,10 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum RarityEngine {
-    RARITY_TOOLS("raritytools", "https://rarity.tools/%s/view/%s", "rarity.tools"),
-    RARITY_SNIPER("raritysniper", "https://raritysniper.com/%s/%s", "raritysniper.com"),
-    TRAIT_SNIPER("traitsniper", "https://app.traitsniper.com/%s?view=%s", "traitsniper.com");
+	NONE("", "", ""),
+	RARITY_TOOLS("raritytools", "https://rarity.tools/%s/view/%s", "rarity.tools"), // NO LOOKUP
+    TRAIT_SNIPER("traitsniper", "https://app.traitsniper.com/%s?view=%s", "traitsniper.com"),
+    METADATA("metadata", "", "");
 
 	@Getter
     private String engineSlug;
