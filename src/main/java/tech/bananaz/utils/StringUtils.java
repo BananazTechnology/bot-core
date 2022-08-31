@@ -292,7 +292,10 @@ public class StringUtils {
 			String rarityValue = event.getRarity();
 			// Build internal Discord output string
 			String rankRank = 
-				(event.getRarityEngine().equals(RarityEngine.METADATA)) ?
+				(
+				 event.getRarityEngine().equals(RarityEngine.METADATA) ||
+				 event.getRarityEngine().equals(RarityEngine.NONE)
+				) ?
 					String.format("%s", rarityValue) :
 					String.format("[%s](%s) on %s", rarityValue, event.getRarityUrl(), event.getRarityEngine().getDisplayName());
 			finalRarity = String.format("**Rank** %s %s", rankRank, NEWLINE);
