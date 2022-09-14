@@ -6,8 +6,7 @@ import com.github.redouane59.twitter.TwitterClient;
 import com.github.redouane59.twitter.dto.tweet.MediaCategory;
 import com.github.redouane59.twitter.dto.tweet.UploadMediaResponse;
 import com.github.redouane59.twitter.signature.*;
-
-import static tech.bananaz.utils.StringUtils.buildRarityString;
+import static tech.bananaz.utils.StringUtils.capitalizeFirstLetter;
 import static tech.bananaz.utils.StringUtils.determineFileType;
 import static tech.bananaz.utils.StringUtils.stringTemplateFormatEvent;
 import static tech.bananaz.utils.UrlUtils.imageUrlToBytes;
@@ -46,10 +45,10 @@ public class TwitterUtils {
 		logSend();
 		if(this.bot != null) { 
 			// Since our template formatting fork we need defaults
-			final String defaultTemplate = ":name:\n%s%s for :priceInCrypto: :priceInUsd:\n:link:";
+			final String defaultTemplate = ":name:%s\n%s for :priceInCrypto: :priceInUsd:\n:link:";
 			// Enables features for Auto Rarity and custom rarity clients
-			final String defaultRarity = buildRarityString(event);
-			String template = String.format(defaultTemplate, defaultRarity, event.getEventType().getVerb());
+			final String defaultRarity = (nonNull(event.getRarity()) && nonNull(event.getRarityEngine())) ? "\nRank: " + event.getRarity() : "";
+			String template = String.format(defaultTemplate, defaultRarity, capitalizeFirstLetter(event.getEventType().getVerb()));
 			String imageAttachmentId = null;
 			
 			// If our Twitter Template is not null, not empty and not blank then grab it

@@ -245,19 +245,21 @@ public class StringUtils {
 				String keyInTemplate = buffer.substring(keyStart, keyEnd);
 				// We use the if statements below to perform special formatting on currencies
 				// Price In Crypto
-				if(keyLC.equalsIgnoreCase("priceInCrypto")) 
+				if(keyLC.equalsIgnoreCase("priceInCrypto")) {
 					if(nonNull(e.getPriceInCrypto()))
 						buffer = buffer.replace(keyInTemplate, String.format("%s%s", e.getPriceInCrypto(), e.getCryptoType().getSymbol()));
 				// Price In USD
-				else if(keyLC.equalsIgnoreCase("priceInUsd")) {
-					if(nonNull(e.getPriceInUsd()))
+				} else if(keyLC.equalsIgnoreCase("priceInUsd")) {
+					if(nonNull(e.getPriceInUsd())) {
 						buffer = buffer.replace(keyInTemplate, String.format("($%s)", dFormat.format(e.getPriceInUsd().doubleValue())));
-					else 
+					} else {
 						buffer = buffer.replace(keyInTemplate, "");
+					}
 				}
 				// This last else formats all other values
-				else
+				else {
 					buffer = buffer.replace(keyInTemplate, String.format("%s", eventKeyValues.getValue()));
+				}
 			}
 		}
 		// Prep outbound response default is null
