@@ -5,15 +5,17 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum EventType {
-	LIST("list", "listed"),
-	SALE("sale", "sold"),
-	MINT("mint", "minted"),
-	BURN("burn", "burned");
+	LIST("list", "listed", "l"),
+	SALE("sale", "sold", "s"),
+	MINT("mint", "minted", "m"),
+	BURN("burn", "burned", "b");
 	
 	@Getter
     private String event;
     @Getter
     private String verb;
+    @Getter
+    private String denotion;
 
     @Override
     public String toString() {
