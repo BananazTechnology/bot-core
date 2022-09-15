@@ -77,7 +77,7 @@ public class Event implements Comparable<Event> {
 	private MarketPlace  market;
 	@Column(columnDefinition = "VARCHAR(127)")
 	private String       metadataUrl;
-	@Column(columnDefinition = "VARCHAR(175)")
+	@Column(columnDefinition = "VARCHAR(180)")
 	private String		 hash;
 	// These last few items are for the consumer
 	private long         configId;
@@ -88,8 +88,8 @@ public class Event implements Comparable<Event> {
 	
 	public Event() {}
 
-	public void setHash(MarketPlace market, String contractAddy, String sellerAddy, String priceInCrypto) {
-		this.hash = String.format("%s:%s:%s:%s", market.getSlug(), contractAddy, sellerAddy, priceInCrypto);
+	public void setHash(EventType eventType, MarketPlace market, String contractAddy, String sellerAddy, String priceInCrypto) {
+		this.hash = String.format("%s:%s:%s:%s:%s", eventType.getDenotion(), market.getSlug(), contractAddy, sellerAddy, priceInCrypto);
 	}
 	
 	@Override
