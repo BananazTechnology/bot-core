@@ -89,7 +89,14 @@ public class Event implements Comparable<Event> {
 	public Event() {}
 
 	public void setHash(EventType eventType, MarketPlace market, String contractAddy, String sellerAddy, String priceInCrypto) {
-		this.hash = String.format("%s:%s:%s:%s:%s", eventType.getDenotion(), market.getSlug(), contractAddy, sellerAddy, priceInCrypto);
+		this.hash = 
+			String.format(
+				"%s:%s:%s:%s:%s", 
+				eventType.getDenotion().toUpperCase(), 
+				market.getSlug().toUpperCase(), 
+				contractAddy, 
+				sellerAddy, 
+				priceInCrypto);
 	}
 	
 	@Override
