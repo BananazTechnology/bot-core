@@ -5,18 +5,20 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum Ticker {
-    ETH("eth", "Ξ"),
-    WETH("weth", "Ξ"),
-    BTC("btc", "₿"),
-    DAI("dai", "◈"),
-    SOL("sol", "◎"),
-    USDC("usdc", "$"),
-    MATIC("matic", "Ξ");
+    ETH("eth", "Ξ", null),
+    WETH("weth", "Ξ", "eth"),
+    BTC("btc", "₿", null),
+    DAI("dai", "◈", null),
+    SOL("sol", "◎", null),
+    USDC("usdc", "$", null),
+    MATIC("matic", "Ξ", null);
 	
 	@Getter
     private String ticker;
     @Getter
     private String symbol;
+    @Getter
+    private String lookupValue;
 
     @Override
     public String toString() {
