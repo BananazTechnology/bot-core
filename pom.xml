@@ -12,7 +12,7 @@
 
   <groupId>tech.bananaz</groupId>
   <artifactId>bot-core</artifactId>
-  <version>1.10.0</version>
+  <version>1.11.0</version>
 
   <name>bot-core</name>
   <description>An @apache Maven library for all core/base project resources</description>
