@@ -48,6 +48,9 @@ public class ParsingUtils {
 		String  permalink		 = String.format("https://looksrare.org/collections/%s/%s", c.getContractAddress(), tokenId);
 		String  metadata		 = token.getAsString("tokenURI");
 		
+		// Metadata URL rewrites
+		if(nonNull(metadata)) metadata = metadata.replace("ipfs://", "https://ipfs.io/ipfs/");
+		
 		// Listing
 		// Get seller information in all cases
 		EventType eventType 	 = EventType.LIST; // Listing by default
@@ -226,6 +229,9 @@ public class ParsingUtils {
 		String collectionName 	  = collection.getAsString("name");
 		String collectionImageUrl = collection.getAsString("image_url");
 		String slug			      = collection.getAsString("slug");
+		
+		// Metadata URL rewrites
+		if(nonNull(metadata)) metadata = metadata.replace("ipfs://", "https://ipfs.io/ipfs/");
 		
 		// Name formatting for when null
 		name = buildNftDisplayName(name, collectionName, tokenId);
