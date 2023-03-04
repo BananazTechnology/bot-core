@@ -31,6 +31,9 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ matrix.java }}
+      # Print settings xml
+      - name: Print settings.xml
+        run: cat ~/.m2/settings.xml
       # Runs a set of commands using the runners shell
       - name: Publish package
         run: mvn --batch-mode deploy
