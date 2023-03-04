@@ -13,10 +13,8 @@ public class OpenseaUtils {
 	private static final String OPENSEA_EVENTS_URL   	   = OS_BASE+"events?event_type=%s&only_opensea=false&limit=%s&%s";
 	private static final String COLLECTION_SLUG_QUERY 	   = "collection_slug=";
 	private static final String CONTRACT_ADDRESS_QUERY 	   = "asset_contract_address=";
-	private static final String ACCOUNT_ADDRESS_QUERY 	   = "account_address=";
 	private static final String APIKEYHEAD 		   		   = "x-api-key";
 	private static final int	POLL_SIZE 				   = 25;
-	private static final String NULL_ADDRESS        	   = "0x0000000000000000000000000000000000000000";
 	private RestTemplate restTemplate 			   		   = new RestTemplate();
 	private StringUtils sUtils  				   		   = new StringUtils();
 	private JsonUtils jsonUtils 						   = new JsonUtils();

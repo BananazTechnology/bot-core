@@ -12,7 +12,7 @@
 
   <groupId>tech.bananaz</groupId>
   <artifactId>bot-core</artifactId>
-  <version>1.12.0</version>
+  <version>1.13.1</version>
 
   <name>bot-core</name>
   <description>An @apache Maven library for all core/base project resources</description>
@@ -59,7 +59,7 @@
 	<dependency>
 	  <groupId>org.javacord</groupId>
 	  <artifactId>javacord</artifactId>
-	  <version>3.3.2</version>
+	  <version>3.7.0</version>
 	  <type>pom</type>
 	</dependency>
 	
